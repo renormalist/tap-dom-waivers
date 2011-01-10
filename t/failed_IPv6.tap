@@ -1,0 +1,9 @@
+TAP version 13
+1..7
+ok 1 - use Some:Zomtec::Lib;
+ok 2 - KEYs + PARENT
+not ok 3 - some virtual IPv6 functionality
+ok 4 - quoted KEY containg slash
+not ok 5 - yet another IPv6 function
+ok 6 - this IPv6 check actually worked
+ok 7 - FILTER eval regex
