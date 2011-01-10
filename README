@@ -1,45 +1,72 @@
-TAP-DOM-Waivers
+NAME
+    TAP::DOM::Waivers - Exceptions (waivers) for TAP::DOM-like data
 
-Exceptions ("waivers") for TAP::DOM
+SYNOPSIS
+     my $dom = TAP::DOM->new(tap => "somefile.tap" );
+     my $waivers = [
+                    {
+                      comment     => "Force all IPv6 stuff to true",
+                      match_dpath => [ "//lines//description[value =~ 'IPv6']/.." ],
+                      patch       => {
+                                      is_ok        => 1,
+                                      has_todo     => 1,
+                                      is_actual_ok => 0,
+                                      explanation  => 'waiver for context xyz',
+                                      directive    => 'TODO',
+                                     },
+                    },
+                   ];
+     my $patched_tap_dom = waiver($dom, $waivers);
+     print $patched_tap_dom->to_tap;
 
-INSTALLATION
+ABOUT
+  Achieve?
+    Test *waivers* are exceptions to actual test results.
 
-To install this module, run the following commands:
+    This module lets you ignore known issues you don't want to care
+    about, usually by grouping exceptions for a certain context.
 
-	perl Makefile.PL
-	make
-	make test
-	make install
+  Example:
+    A software project might not run with IPv6 enabled but you want to
+    see a big SUCCESS or NO SUCCESS in a IPv4-only context, without
+    being disturbed by irrelevant IPv6 tests, for now.
 
-SUPPORT AND DOCUMENTATION
+    Marking the problematic tests with "#TODO" would require to change
+    that back and forth everytime. Dynamically marking those tests
+    depending on the runtime environment does not help when another
+    engineer actually works on those problems.
 
-After installing, you can find documentation for this module with the
-perldoc command.
+    The solution is to create a *waiver* which patches the IPv6 issues
+    in the results after you actually ran the tests, for later
+    evaluation.
 
-    perldoc TAP::DOM::Waivers
+  How to match what to patch
+    This module can patch TAP-DOMs (and similar data structures, see
+    below) by certain criteria. The primary and most powerful way is
+    via Data::DPath paths, as it allows to match fuzzily against
+    continuously changing TAP from evolving test suites.
 
-You can also look for information at:
+    I use this with a big TAP database where I activate waivers as a
+    layer on top of TAP::DOM based evaluation. There the TAP-DOMs are
+    just part of a even bigger data structure, but the DPath matching
+    still applies there.
 
-    RT, CPAN's request tracker
-        http://rt.cpan.org/NoAuth/Bugs.html?Dist=TAP-DOM-Waivers
+  Back from DOM to TAP
+    Usually you regenerate a semantically comparable TAP document from
+    the DOM via TAP::DOM::to_tap.
 
-    AnnoCPAN, Annotated CPAN documentation
-        http://annocpan.org/dist/TAP-DOM-Waivers
 
-    CPAN Ratings
-        http://cpanratings.perl.org/d/TAP-DOM-Waivers
-
-    Search CPAN
-        http://search.cpan.org/dist/TAP-DOM-Waivers/
+AUTHOR
+    Steffen Schwigon, "<ss5 at renormalist.net>"
 
 
 LICENSE AND COPYRIGHT
+    Copyright 2011 Steffen Schwigon.
 
-Copyright (C) 2011 Steffen Schwigon
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of either: the GNU General Public
+    License as published by the Free Software Foundation; or the
+    Artistic License.
 
-This program is free software; you can redistribute it and/or modify it
-under the terms of either: the GNU General Public License as published
-by the Free Software Foundation; or the Artistic License.
-
-See http://dev.perl.org/licenses/ for more information.
+    See http://dev.perl.org/licenses/ for more information.
 
