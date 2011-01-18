@@ -41,6 +41,7 @@ my $tap3   = slurp( "t/failed_IPv6.tap" );
 my $tapdom = TAP::DOM->new( tap => $tap3 );
 
 my $comment = "failed IPv6";
+#
 is($tapdom->{summary}{todo},         0,      "$comment - summary todo");
 is($tapdom->{summary}{total},        7,      "$comment - summary total");
 is($tapdom->{summary}{passed},       5,      "$comment - summary passed");
@@ -83,5 +84,20 @@ is($tapdom->{summary}{all_passed},   0,      "$comment - summary all_passed");
 is($tapdom->{summary}{has_problems}, 1,      "$comment - summary has_problems");
 
 # ==================================================
+
+waive($tapdom, $waivers, { no_clone => 1 });
+my $tapdom4        = TAP::DOM->new( tap => $tapdom->to_tap );
+
+$comment = "original DOM changed in place";
+#
+is($tapdom4->{summary}{todo},         2,      "$comment - summary todo");
+is($tapdom4->{summary}{total},        7,      "$comment - summary total");
+is($tapdom4->{summary}{passed},       7,      "$comment - summary passed");
+is($tapdom4->{summary}{failed},       0,      "$comment - summary failed");
+is($tapdom4->{summary}{exit},         0,      "$comment - summary exit");
+is($tapdom4->{summary}{wait},         0,      "$comment - summary wait");
+is($tapdom4->{summary}{status},       "PASS", "$comment - summary status");
+is($tapdom4->{summary}{all_passed},   1,      "$comment - summary all_passed");
+is($tapdom4->{summary}{has_problems}, 0,      "$comment - summary has_problems");
 
 done_testing();
