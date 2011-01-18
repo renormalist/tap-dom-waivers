@@ -101,3 +101,5 @@ is($tapdom4->{summary}{all_passed},   1,      "$comment - summary all_passed");
 is($tapdom4->{summary}{has_problems}, 0,      "$comment - summary has_problems");
 
 done_testing();
+
+# prove -e 'cat' t/failed_IPv6.tap
