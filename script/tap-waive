@@ -1,0 +1,24 @@
+#! /usr/bin/env perl
+
+use strict;
+use warnings;
+
+use YAML::Any;
+use TAP::DOM;
+use TAP::DOM::Waivers 'waive';
+
+my $waiverfile = "t/waiver.yml";
+my $tapfile    = "t/failed_IPv6.tap";
+
+sub slurp {
+        my ($filename) = @_;
+
+        local $/;
+        open (TAP, "<", $filename) or die "Cannot read $filename";
+        return <TAP>;
+}
+
+my $waivers        = YAML::Any::Load(slurp($waiverfile));
+my $tapdom         = TAP::DOM->new(tap => slurp($tapfile));
+my $patched_tapdom = waive($tapdom, $waivers);
+print $patched_tapdom->to_tap;
