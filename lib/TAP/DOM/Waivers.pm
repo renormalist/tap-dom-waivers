@@ -37,11 +37,41 @@ sub waive {
         return $$new_dom_ref;
 }
 
+sub _meta_patch {
+        my ($metapatch) = @_;
+
+        my $patch;
+        my $explanation;
+        if ($explanation = $metapatch->{TODO}) {
+                $patch = {
+                          is_ok        => 1,
+                          has_todo     => 1,
+                          is_actual_ok => 0,
+                          directive    => 'TODO',
+                          explanation  => $explanation,
+                         };
+        } elsif ($explanation = $metapatch->{SKIP}) {
+                $patch = {
+                          is_ok        => 1,
+                          has_skip     => 1,
+                          is_actual_ok => 0,
+                          directive    => 'SKIP',
+                          explanation  => $explanation,
+                         };
+        }
+        return $patch;
+}
+
 sub _patch_dom_dpath {
         my ($dom_ref, $waiver, $path) = @_;
 
+        my $patch;
+        if (exists $waiver->{metapatch}) {
+                $patch = _meta_patch($waiver->{metapatch});
+        } else {
+                $patch = $waiver->{patch};
+        }
         my $comment  = $waiver->{comment};
-        my $patch    = $waiver->{patch};
         my @points   = dpathr($path)->match($$dom_ref);
         foreach my $p (@points) {
                 $$p->{$_} = $patch->{$_} foreach keys %$patch;
