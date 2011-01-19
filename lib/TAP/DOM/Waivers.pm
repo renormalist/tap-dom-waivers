@@ -1,5 +1,6 @@
 package TAP::DOM::Waivers;
 
+use 5.008;
 use strict;
 use warnings;
 
