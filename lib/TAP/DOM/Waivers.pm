@@ -25,16 +25,24 @@ sub waive {
         foreach my $waiver (@$waivers) {
                 # apply on matching dpath
                 if (my @paths = @{$waiver->{match_dpath} || []}) {
-                        foreach my $path (@paths) {
-                                _patch_dom_dpath( $new_dom_ref, $waiver, $path );
-                        }
+                        _patch_dom_dpath( $new_dom_ref, $waiver, $_ ) foreach @paths;
                 }
-                # if-elsif cascade for others, test numbers, TAP lines, etc
-                else {
-                        # nop
+                elsif (my @descriptions = @{$waiver->{match_description} || []}) {
+                        my @paths = map { _description_to_dpath($_) } @descriptions;
+                        _patch_dom_dpath( $new_dom_ref, $waiver, $_ ) foreach @paths;
                 }
         }
         return $$new_dom_ref;
+}
+
+sub _description_to_dpath {
+        my ($description) = @_;
+
+        # the '#' as delimiter is not expected in a description
+        # because it has TAP semantics, however, we escape to be sure
+        $description =~ s/\#/\\\#/g;
+
+        return "//lines//description[value =~ qr#$description#]/..";
 }
 
 sub _meta_patch {
