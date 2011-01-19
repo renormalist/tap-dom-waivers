@@ -35,6 +35,17 @@ my $waivers = [
                },
               ];
 
+my $metawaivers = [
+                   {
+                    # a description of what the waiver is trying to achieve
+                    comment     => "Force all failed IPv6 stuff to true",
+                    match_dpath => [ "//lines//description[value =~ /IPv6/]/../is_ok[value eq 0]/.." ],
+                    metapatch   => {
+                                    TODO  => 'ignore failing IPv6 related tests'
+                                   },
+                   },
+                  ];
+
 # ==================================================
 
 my $tap3   = slurp( "t/failed_IPv6.tap" );
@@ -70,7 +81,6 @@ is($tapdom3->{summary}{status},       "PASS", "$comment - summary status");
 is($tapdom3->{summary}{all_passed},   1,      "$comment - summary all_passed");
 is($tapdom3->{summary}{has_problems}, 0,      "$comment - summary has_problems");
 
-
 $comment = "original failed IPv6 unchanged";
 #
 is($tapdom->{summary}{todo},         0,      "$comment - summary todo");
@@ -82,6 +92,23 @@ is($tapdom->{summary}{wait},         0,      "$comment - summary wait");
 is($tapdom->{summary}{status},       "FAIL", "$comment - summary status");
 is($tapdom->{summary}{all_passed},   0,      "$comment - summary all_passed");
 is($tapdom->{summary}{has_problems}, 1,      "$comment - summary has_problems");
+
+# DOM patching with metapatch
+my $patched_tapdom_meta = waive($tapdom, $metawaivers);
+my $tapdom3a            = TAP::DOM->new( tap => $patched_tapdom_meta->to_tap );
+
+$comment = "waivers for IPv6 with metapatch";
+#
+is($tapdom3a->{summary}{todo},         2,      "$comment - summary todo");
+is($tapdom3a->{summary}{total},        7,      "$comment - summary total");
+is($tapdom3a->{summary}{passed},       7,      "$comment - summary passed");
+is($tapdom3a->{summary}{failed},       0,      "$comment - summary failed");
+is($tapdom3a->{summary}{exit},         0,      "$comment - summary exit");
+is($tapdom3a->{summary}{wait},         0,      "$comment - summary wait");
+is($tapdom3a->{summary}{status},       "PASS", "$comment - summary status");
+is($tapdom3a->{summary}{all_passed},   1,      "$comment - summary all_passed");
+is($tapdom3a->{summary}{has_problems}, 0,      "$comment - summary has_problems");
+
 
 # ==================================================
 
