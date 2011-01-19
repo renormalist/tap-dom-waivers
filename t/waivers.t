@@ -46,6 +46,17 @@ my $metawaivers = [
                    },
                   ];
 
+my $metawaivers_desc = [
+                        {
+                         # a description of what the waiver is trying to achieve
+                         comment           => "Force all failed IPv6 stuff to true",
+                         match_description => [ "IPv6" ],
+                         metapatch         => {
+                                               TODO  => 'ignore failing IPv6 related tests'
+                                              },
+                        },
+                       ];
+
 # ==================================================
 
 my $tap3   = slurp( "t/failed_IPv6.tap" );
@@ -109,6 +120,23 @@ is($tapdom3a->{summary}{status},       "PASS", "$comment - summary status");
 is($tapdom3a->{summary}{all_passed},   1,      "$comment - summary all_passed");
 is($tapdom3a->{summary}{has_problems}, 0,      "$comment - summary has_problems");
 
+# DOM patching with metapatch and match_description
+my $patched_tapdom_meta_desc = waive($tapdom, $metawaivers_desc);
+my $tapdom3b                 = TAP::DOM->new( tap => $patched_tapdom_meta_desc->to_tap );
+
+$comment = "waivers for IPv6 with metapatch and match_description";
+#
+# here we match less strict, therefore we patch more entries to be "# TODO"
+is($tapdom3b->{summary}{todo},         3,      "$comment - summary todo");
+# the rest is the same
+is($tapdom3b->{summary}{total},        7,      "$comment - summary total");
+is($tapdom3b->{summary}{passed},       7,      "$comment - summary passed");
+is($tapdom3b->{summary}{failed},       0,      "$comment - summary failed");
+is($tapdom3b->{summary}{exit},         0,      "$comment - summary exit");
+is($tapdom3b->{summary}{wait},         0,      "$comment - summary wait");
+is($tapdom3b->{summary}{status},       "PASS", "$comment - summary status");
+is($tapdom3b->{summary}{all_passed},   1,      "$comment - summary all_passed");
+is($tapdom3b->{summary}{has_problems}, 0,      "$comment - summary has_problems");
 
 # ==================================================
 
