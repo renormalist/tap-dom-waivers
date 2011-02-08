@@ -1,0 +1,123 @@
+=head1 NAME
+
+App::Prove::Plugin::Waivers - a prove plugin for TAP::DOM::Waivers
+
+=head1 SYNOPSIS
+
+Command-line usage:
+
+ # generally
+ prove -P Waivers=waiverspec.yml [...]
+
+ # example
+ prove -e cat -P Waivers=waiver.yml t/failed_IPv6.tap
+
+=head1 DESCRIPTION
+
+This plugin allows modifying TAP via
+L<TAP::DOM::Waivers|TAP::DOM::Waivers>. Read there for the motivation.
+
+It loads a spec (I<waiver>) file, loads the original TAP, converts it
+into an intermediate TAP-DOM, applies the waivers to that TAP-DOM,
+converts the patched TAP-DOM back to TAP and provides that to the
+TAP::Parser instead of the original TAP.
+
+=head2 Example waiver config
+
+A C<waiver.yml> contains a specification like this:
+
+  ---
+  - comment: Force all failed IPv6 stuff to true
+    match_dpath:
+      - "//lines//description[value =~ /IPv6/]/../is_ok[value eq 0]/.."
+    patch:
+      is_ok:        1
+      has_todo:     1
+      is_actual_ok: 0
+      explanation:  ignore failing IPv6 related tests
+      directive:    TODO
+
+This specifies to modify (patch) every B<not ok> tests where the
+description matches the regex C</IPv6/>. They are fixed by declaring
+them to be a I<#TODO> test with the explanation.
+
+See L<TAP::DOM::Waivers|TAP::DOM::Waivers> for description of the
+backend behind this prove plugin.
+
+See L<TAP::DOM|TAP::DOM> for description of the TAP-DOM data structure
+that is modified.
+
+See L<Data::DPath|Data::DPath> for description of the xpath-like query
+language used to find the tests. It provides the power for fuzzy
+tracking of tests in ever changing test suites.
+
+=head2 Waiver specification
+
+A waiver file is a YAML representation of a waiver spec as described
+in L<TAP::DOM::Waivers|TAP::DOM::Waivers>. Please read there for the
+data structure and adapt it into YAML as shown in the SYNOPSIS.
+
+=head1 AUTHOR
+
+Steffen Schwigon, C<< <ss5 at renormalist.net> >>
+
+=head1 ACKNOWLEDGEMENTS
+
+The prove plugin code is shamelessly stolen from Steve Purkis'
+L<App::Prove::Plugin::HTML|App::Prove::Plugin::HTML>.
+
+=head1 BUGS
+
+Please report any bugs or feature requests to C<bug-tap-dom-waivers at
+rt.cpan.org>, or through the web interface at
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=TAP-DOM-Waivers>.  I
+will be notified, and then you'll automatically be notified of
+progress on your bug as I make changes.
+
+
+=head1 SEE ALSO
+
+L<prove>, L<App::Prove>
+
+
+=head1 SUPPORT
+
+You can find documentation for this module with the perldoc command.
+
+    perldoc TAP::DOM::Waivers
+
+
+You can also look for information at:
+
+=over 4
+
+=item * RT: CPAN's request tracker
+
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=TAP-DOM-Waivers>
+
+=item * AnnoCPAN: Annotated CPAN documentation
+
+L<http://annocpan.org/dist/TAP-DOM-Waivers>
+
+=item * CPAN Ratings
+
+L<http://cpanratings.perl.org/d/TAP-DOM-Waivers>
+
+=item * Search CPAN
+
+L<http://search.cpan.org/dist/TAP-DOM-Waivers/>
+
+=back
+
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright 2011 Steffen Schwigon.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of either: the GNU General Public License as
+published by the Free Software Foundation; or the Artistic License.
+
+See http://dev.perl.org/licenses/ for more information.
+
+=cut
