@@ -98,14 +98,15 @@ A software project might not run with IPv6 enabled but you want to see
 a big SUCCESS or NO SUCCESS in an IPv4-only context, without being
 disturbed by irrelevant IPv6 tests, for now.
 
-Marking the problematic tests with C<#TODO> would require to change
-that back and forth everytime. Dynamically marking those tests
-depending on the runtime environment does not help when another
+Statically marking the problematic tests with C<#TODO> would require
+to change that back and forth everytime. Dynamically marking those
+tests depending on the runtime environment does not help when another
 engineer actually works on fixing the problems in the same
 environment.
 
-The solution is to create a I<waiver> which patches the IPv6 issues in
-the results B<after> you actually ran the tests, for later evaluation.
+The solution is to create a I<waiver> which patches the IPv6 issues
+away in the results B<after> you actually ran the tests, for later
+evaluation.
 
 =head2 Prove plugin
 
