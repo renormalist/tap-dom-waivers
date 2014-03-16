@@ -1,4 +1,5 @@
 package TAP::DOM::Waivers::Formatter::Session; # better TAP::Formatter::DOM::Session?
+# ABSTRACT: (incomplete) 'prove' plugin support for TAP::DOM::Waivers
 
 use strict;
 use warnings;
@@ -10,8 +11,6 @@ use YAML::Any;
 use TAP::DOM;
 use TAP::DOM::Waivers 'waive';
 use File::Temp 'tempfile';
-
-our $VERSION = '0.01';
 
 sub _slurp {
         my ($filename) = @_;
@@ -72,10 +71,10 @@ sub as_report {
     my ($self) = @_;
     my $p = $self->parser;
     my $r = {
-	     test => $self->test,
-	     results => $self->results,
-             AFFE => "ZOMTEC",
-	    };
+        test => $self->test,
+        results => $self->results,
+        AFFE => "ZOMTEC",
+    };
 
     $self->info( "AS_REPORT" );
 
@@ -92,5 +91,20 @@ sub info {
     $self->formatter->log_test_info(@args);
 }
 
-
 1;
+
+__END__
+
+=head2 METHODS
+
+=head3 as_report
+
+=head3 close_test
+
+=head3 info
+
+=head3 log
+
+=head3 result
+
+=cut

@@ -1,0 +1,10 @@
+Revision history for {{$dist->name}}
+
+{{$NEXT}}
+        - experimental prove plugin
+        - Exceptions (waivers) for TAP::DOM-like data
+
+2011-01-10  Steffen Schwigon  <ss5@renormalist.net>
+
+	* initial version
+

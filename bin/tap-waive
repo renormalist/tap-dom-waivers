@@ -1,10 +1,12 @@
 #! /usr/bin/env perl
+# PODNAME: tap-waive
+# ABSTRACT: frontend to TAP::DOM::Waivers
 
 use strict;
 use warnings;
 
 use YAML::Any;
-use TAP::DOM;
+use TAP::DOM 0.06;
 use TAP::DOM::Waivers 'waive';
 
 my $waiverfile = "t/waiver.yml";

@@ -1,9 +1,8 @@
 package TAP::DOM::Waivers::Formatter; # better TAP::Formatter::DOM?
+# ABSTRACT: (incomplete) 'prove' plugin support for TAP::DOM::Waivers
 
 use strict;
 use warnings;
-
-our $VERSION = '0.01';
 
 use TAP::DOM::Waivers::Formatter::Session; # better TAP::Formatter::DOM::Session?
 use Data::Dumper;
@@ -82,8 +81,8 @@ sub open_test {
     #warn ref($self) . "->open_test called with args: " . Dumper( [$test, $parser] );
     $self->info( 'OPEN_TEST');
     my $session = $self->session_class->new({ test => $test,
-					      parser => $parser,
-					      formatter => $self,
+                                              parser => $parser,
+                                              formatter => $self,
                                             });
     push @{ $self->sessions }, $session;
     return $session;
@@ -131,11 +130,11 @@ sub _output {
     my $self = shift;
     return if $self->silent;
     if (ref($_[0]) && ref( $_[0]) eq 'SCALAR') {
-	# DEPRECATED: printing HTML:
-	print { $self->stdout } ${ $_[0] };
+        # DEPRECATED: printing HTML:
+        print { $self->stdout } ${ $_[0] };
     } else {
-	unshift @_, '# ' if $self->escape_output;
-	print { $self->stdout } @_;
+        unshift @_, '# ' if $self->escape_output;
+        print { $self->stdout } @_;
     }
 }
 
@@ -168,3 +167,33 @@ sub silent {
 }
 
 1;
+
+__END__
+
+=head2 METHODS
+
+=head3 check_for_overrides_in_env
+
+=head3 info
+
+=head3 log
+
+=head3 log_test
+
+=head3 log_test_info
+
+=head3 open_test
+
+=head3 prepare
+
+=head3 quiet
+
+=head3 really_quiet
+
+=head3 silent
+
+=head3 summary
+
+=head3 verbose
+
+=cut
