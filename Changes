@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.001     2014-03-16
         - experimental prove plugin
         - Exceptions (waivers) for TAP::DOM-like data
 
