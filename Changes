@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+        - fix dependency declaration
 
 0.001     2014-03-16
         - experimental prove plugin
