@@ -169,11 +169,11 @@ TAP::DOM::Waivers - Exceptions (waivers) for TAP::DOM-like data
  
  # the original DOM can also be patched directly without cloning
  waiver($dom, $waivers, { no_clone => 1 });
- print Dumper(dom);
+ print Dumper($dom);
  
  # convert back to TAP from patched DOM
  print $patched_tap_dom->to_tap;
- print dom->to_tap;
+ print $dom->to_tap;
 
 =head1 ABOUT
 
