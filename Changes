@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.002     2015-10-07
         - fix dependency declaration
 
 0.001     2014-03-16
